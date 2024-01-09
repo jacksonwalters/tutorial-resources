@@ -3,6 +3,7 @@ let linkTokenData;
 const initializeLink = async function () {
   const linkTokenResponse = await fetch(`/api/create_link_token`);
   linkTokenData = await linkTokenResponse.json();
+  localStorage.setItem("linkTokenData",JSON.stringify(linkTokenData));
   document.querySelector("#startLink").classList.remove("opacity-50");
   console.log(JSON.stringify(linkTokenData));
 };
