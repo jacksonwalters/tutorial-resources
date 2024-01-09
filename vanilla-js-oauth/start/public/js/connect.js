@@ -26,6 +26,10 @@ const startLink = function () {
           metadata
         )}`
       );
+      localStorage.setItem("linkTokenData","(removed)");
+      if (err!=null) {
+        document.querySelector("#userMessage").innerHTML = "Oh no! We got some kind of error! Please <a href='connect.html'>try again</a>.";
+      }
     },
     onEvent: (eventName, metadata) => {
       console.log(`Event ${eventName}`);
