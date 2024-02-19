@@ -15,7 +15,11 @@ const router = express.Router();
  */
 router.post("/sync", async (req, res, next) => {
   try {
-    res.json({ todo: "Implement this method" });
+    const userId = getLoggedInUserId(req);
+    const items = await db.getItemIdsForUser(userId);
+    items.forEach((item) => {
+      syncTransactions(item.id);
+    })
   } catch (error) {
     console.log(`Running into an error!`);
     next(error);
@@ -30,7 +34,14 @@ router.post("/sync", async (req, res, next) => {
  */
 const syncTransactions = async function (itemId) {
   const summary = { added: 0, removed: 0, modified: 0 };
-  // TODO: Implement this!
+  const { access_token: accessToken } = await db.getItemInfo(itemId);
+  const results = await plaidClient.transactionsSync({
+    access_token: accessToken,
+    options: {
+      include_personal_finance_category: true,
+    }
+  });
+  console.dir(results.data, {depth: null, colors: true});
   return summary;
 };
 

@@ -19,7 +19,7 @@ router.post("/generate_link_token", async (req, res, next) => {
     const userObject = { client_user_id: userId };
     const tokenResponse = await plaidClient.linkTokenCreate({
       user: userObject,
-      products: ["identity"],
+      products: ["transactions"],
       client_name: "Where'd My Money Go?",
       language: "en",
       country_codes: ["US"],
@@ -48,13 +48,6 @@ router.post("/exchange_public_token", async (req, res, next) => {
     await db.addItem(tokenData.item_id, userId, tokenData.access_token);
     await populateBankName(tokenData.item_id, tokenData.access_token);
     await populateAccountNames(tokenData.access_token);
-
-    /* Placeholder code to show that something works! */
-    const identityResult = await plaidClient.identityGet({
-      access_token: tokenData.access_token,
-    });
-    console.log(`Here's some info about the account holders:`);
-    console.dir(identityResult.data, { depth: null, colors: true });
 
     res.json({ status: "success" });
   } catch (error) {
